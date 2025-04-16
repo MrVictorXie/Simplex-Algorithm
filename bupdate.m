@@ -9,7 +9,7 @@ function [newBmatrix, newindices, newcb] = bupdate(Bmatrix, indices, cb, cs, s, 
 %   vector.
 %   cs, is the cost of the entering variable.
 %   s, is the index of the entering variable.
-%   as, is the entering column
+%   as, is the entering column values.
 %   leave, is the column (pth position) of the basis matrix which leaves
 % Outputs:
 %   newBmatrix, is the new basis matrix which has the leaving column
@@ -20,6 +20,18 @@ function [newBmatrix, newindices, newcb] = bupdate(Bmatrix, indices, cb, cs, s, 
 % Author: Victor Xie
 
 
+if leave == 0
+    return
+end
+% Update basis matrix with new as
+newBmatrix = Bmatrix;
+newBmatrix(:,leave) = as;
 
+% update indices
+newindices = indices;
+newindices(leave) = s;
 
-
+% update cost of basic variables
+newcb = cb;
+newcb(leave) = cs;
+end
