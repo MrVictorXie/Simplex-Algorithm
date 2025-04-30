@@ -34,7 +34,6 @@ Bmatrix = [1 1 1;
            0 1 0];
 indices = [1; 2; 3]; % indices of slack variables initially in the basis
 
-
 % Run simplex
 [z, x, pi_vals, final_indices, exitflag] = simplex(A, b, c, m, n, Bmatrix, indices);
 
@@ -180,38 +179,40 @@ disp('Final basis indices:');
 disp(final_indices');
 disp('Final reduced cost vector pi:');
 disp(pi_vals);
-
 %% Unbounded LP Test
 
-A = [0.08 0.06 -1 0 0;
-     1 0 0 -1 0;
-     0 1 0 0 -1];
+% LP:
+% Maximize z = x1 + x2
+% Subject to:
+%   x1 - x2 = 1
+%   x1, x2 ≥ 0
 
-b = [12; 60; 60];
-c = [-2; -1.25; 0; 0; 0];
+% This LP is unbounded: as x1 → ∞, x2 → ∞, and x1 - x2 = 1 still holds.
 
-m = 3; % number of constraints
-n = 5; % number of variables (including slack)
+% Standard form: equality constraints only (already satisfied here)
 
-% Initial basis (identity matrix part)
-indices = [3; 4; 5]; % indices of slack variables initially in the basis
-Bmatrix = A(:,indices);
+A = [1 -1];    % One equality constraint
+b = [1];
+c = [1; 1];    % Objective: Maximize x1 + x2
 
+m = 1;         % number of constraints
+n = 2;         % number of variables
+
+% Initial basis: pick x1 (column 1) as the basic variable
+Bmatrix = A(:, 1);     % Basis matrix is [1]
+indices = [1];         % x1 is the basic variable
 
 % Run simplex
 [z, x, pi_vals, final_indices, exitflag] = simplex(A, b, c, m, n, Bmatrix, indices);
 
-% Display results
-disp('Unbounded Test');
+% Display result
+disp('Unbounded LP Test');
+disp(['Exit flag: ', num2str(exitflag)]);  % should be -1
 disp(['Optimal value z: ', num2str(z)]);
-disp('Optimal solution x:');
-disp(x);
-disp(['Exit flag: ', num2str(exitflag)]);
+disp('Solution x:');
+disp(x');
 disp('Final basis indices:');
-disp(final_indices);
-disp('Final pi values:');
-disp(pi_vals);
-
+disp(final_indices');
 
 
 
