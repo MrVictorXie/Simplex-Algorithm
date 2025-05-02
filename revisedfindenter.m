@@ -16,28 +16,19 @@ function[as, cs, s] = revisedfindenter(A, pivalues ,c,isbasic,phase)
 
 n = size(A,2);
 reducedcost = zeros(1,n);
-
+position = zeros(1,n);
 for i = 1:n
-    reducedcost(i) = c(i) - pivalues' * A(:,i);     
-end
-
-% check if positive
-position = [];
-negativevars = [];
-for i = 1:n
-    % Find the reduce cost of nonbasic variables
-    if reducedcost(i) < 0 && isbasic(i) == 0
-        position = [position, i];
-        negativevars = [negativevars, reducedcost(i)];
+    if isbasic(i) == 0
+        reducedcost(i) = c(i) - pivalues' * A(:,i);   
+        position(i) = i;
     end
 end
 
-rc = dictionary(negativevars,position);
-minvalue = min(negativevars);
+minvalue = min(reducedcost);
 p = 0;
 x = 0;
-for i = 1:length(negativevars)
-    if negativevars(i) == minvalue
+for i = 1:length(reducedcost)
+    if reducedcost(i) == minvalue
         if x == 0
             p = i;
         end
@@ -49,11 +40,7 @@ end
 tolerance = -1E-6;
 if minvalue <  tolerance
     % Bland's rule
-    if x ~= 1
-        s = position(p);
-    else 
-        s = rc(minvalue);
-    end
+    s = position(p);
     as = A(:,s);
     cs = c(s);
 else

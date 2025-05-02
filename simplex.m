@@ -58,5 +58,6 @@ pivalues = pi;
 z = cb' * xb;
 x =  zeros(1,n);
 x(indices) = xb;
+x = x';
 
 

@@ -51,7 +51,6 @@ if exitflag == 0 && z == 0
             exitflag = 1;
         end
     end
- 
 elseif exitflag == -1
     % Return unbounded
     return

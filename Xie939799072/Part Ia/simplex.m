@@ -38,20 +38,17 @@ while s ~= 0
     %end
 
     [as, cs, s] = findenter(m,n, A, pi ,c);
-    leave = findleave(m, Bmatrix, as, xb);
-    
-
-    % check if problem is unbounded
-    if leave == 0 &&
-        exitflag = -1;
-        break
-    end
-
     % check if optimal solution was found
     if s == 0
         break
     end
-
+    
+    leave = findleave(m, Bmatrix, as, xb);
+    % check if problem is unbounded
+    if leave == 0 && s ~= 0
+        exitflag = -1;
+        break
+    end
 
     [Bmatrix, indices, cb] = bupdate(Bmatrix, indices, cb, cs, s, as, leave);
 end
@@ -61,5 +58,6 @@ pivalues = pi;
 z = cb' * xb;
 x =  zeros(1,n);
 x(indices) = xb;
+x = x';
 
 
